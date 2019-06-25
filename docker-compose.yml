@@ -1,0 +1,30 @@
+version: "3"
+services:
+  web:
+    build: .
+    depends_on:
+      - mongo
+    volumes:
+      - /tmp/files:/app/files
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: "27017"
+    ports:
+      - "5000:5000"
+      - "5555:5555"
+    networks:
+      - webnet
+  mongo:
+    image: mongo:latest
+    deploy:
+      replicas: 1
+    ports:
+      - "27017:27017"
+    networks:
+      - webnet
+networks:
+  webnet:
